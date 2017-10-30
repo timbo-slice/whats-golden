@@ -1,0 +1,4 @@
+data/
+golden.egg-info/
+golden/__pycache__/
+.idea
