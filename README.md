@@ -8,5 +8,5 @@ The code in golden/simulation.py is based on the method presented by D.S. He, Z.
 ## install
 you need numpy, scipy and matplotlib (ananconda)
 - clone the repo
-- ´´´python setup.py develop´´´
+- `python setup.py develop`
 - edit the config.py to point to your xyz files
