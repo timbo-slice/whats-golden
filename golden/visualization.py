@@ -56,7 +56,7 @@ def series1d(X, filen):
         plt.cla()
 
 
-def create_2d_rot_plot(DATAPATH, rotations_per_axis=2, mode='normal'):
+def create_2d_rot_plot(datafile, rotations_per_axis=2, mode='normal'):
     # mode = 'normal', 'fftabs', 'fftangle'
 
     if mode == 'fftabs' or mode == 'fftangle':
@@ -66,7 +66,7 @@ def create_2d_rot_plot(DATAPATH, rotations_per_axis=2, mode='normal'):
     else:
         raise AttributeError()
 
-    X = load_data(DATAPATH)
+    X = load_data(datafile)
     X -= - np.mean(X, axis=0)
     rotsx = np.linspace(0, .5 * np.pi, rotations_per_axis)
     rotsy = np.linspace(0, .5 * np.pi, rotations_per_axis)
@@ -80,7 +80,7 @@ def create_2d_rot_plot(DATAPATH, rotations_per_axis=2, mode='normal'):
         rotx, roty = rots[i][0], rots[i][1]
         indx, indy = indices[i][0], indices[i][1]
         X_ = rotations.rotate(X, rotx, roty, 0)
-        im = create_image(X_, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET, SCATTER_ALPHA)
+        im = create_image(X_, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET)
         if mode == 'fftabs':
             fftim = crop_fft(custom_fft_abs(im))
             final[indx * pxs:(indx + 1) * pxs,indy * pxs:(indy + 1) * pxs] = fftim
@@ -94,14 +94,16 @@ def create_2d_rot_plot(DATAPATH, rotations_per_axis=2, mode='normal'):
     plt.yticks(pxs/2. + np.linspace(0, rotations_per_axis - 1, rotations_per_axis) * pxs, np.degrees(rotsx))
     plt.xticks(pxs/2. + np.linspace(0, rotations_per_axis - 1, rotations_per_axis) * pxs, np.degrees(rotsy))
     plt.xlabel('rotation around axis y'); plt.ylabel('rotation around axis x')
-    plt.title(os.path.split(DATAPATH)[1]); plt.savefig(os.path.split(DATAPATH)[1] + '_' + mode + '.png', dpi=800)
+    title = mode + ' ' + os.path.split(datafile)[1]
+    plt.title(title)
+    plt.savefig(os.path.join(PICSPATH, title) + '.png', dpi=800)
     # plt.show()
     plt.cla()
 
 
-def im_fft(DATAPATH):
-    X = load_data(DATAPATH)
-    im = create_image(X, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET, SCATTER_ALPHA)
+def im_fft(datafile):
+    X = load_data(datafile)
+    im = create_image(X, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET)
     im = bright_to_dark(im)
     fftim = custom_fft_abs(im)
 
@@ -120,7 +122,7 @@ def series3d(X, filen):
     for i in range(len(rots)):
         print(i)
         X_ = rotations.rotate(X, rots[i][0], rots[i][1], rots[i][2])
-        im = create_image(X_, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET, SCATTER_ALPHA)
+        im = create_image(X_, PIXELS, DEPTH_RESOLUTION, DEPTH_OFFSET)
         plt.imshow(im, cmap='Greys')
         plt.title('rot')
         plt.savefig('%s_%i' % (filen, i))
@@ -128,9 +130,8 @@ def series3d(X, filen):
 
 
 if __name__ == '__main__':
-    for FILENAME in FILENAMES:
-        DATAPATH = os.path.join(FOLDERPATH, FILENAME)
-        create_2d_rot_plot(DATAPATH, rotations_per_axis=3, mode='fftangle')
+    for datafile in [os.path.join(CORDSPATH, f) for f in os.listdir(CORDSPATH) if os.path.isfile(os.path.join(CORDSPATH, f))]:
+        create_2d_rot_plot(datafile, rotations_per_axis=3, mode='fftabs')
     # im_fft()
 
     # single_show(np.radians(0), np.radians(0), np.radians(0))

@@ -1,14 +1,17 @@
-
 # core
 import os
-from pdb import set_trace
+from pdb import set_trace  # imported here so it an be used throughout the module without explicit import
 
-FOLDERPATH = '/home/asdmueller/Desktop/mst/data/cords/'
-FILENAMES = ['Au790_R2.0Rec69_ang.xyz', 'Au871_fcc.xyz',
-             'Au887_N11_M7_K5_decaedro_Marks.xyz', 'Au923_ICO.xyz', 'Au967-cluster-hcp.xyz']
-FILENAME = FILENAMES[0]
+BASEPATH = os.path.join(os.path.split(os.path.abspath(__file__))[0], '..')
+CORDSPATH = os.path.join(BASEPATH, 'data/in/cords/')
 
-DATAPATH = os.path.join(FOLDERPATH, FILENAME)
+PICSPATH = os.path.join(BASEPATH, 'data/out/pics1/')
+
+print(BASEPATH)
+print(CORDSPATH)
+print(PICSPATH)
+if not os.path.exists(PICSPATH):
+    os.makedirs(PICSPATH)
 
 PIXELS = 512  # PIXELS x PIXELS image
 DEPTH_RESOLUTION = 25  # number of histogram bins in z-direction

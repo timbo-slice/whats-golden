@@ -9,10 +9,9 @@ from scipy.ndimage.filters import gaussian_filter
 
 # local
 from golden.config import *
-from golden.config import FFT_ZOOM_FACTOR, PIXELS
 
 
-def create_image(X, pixs, depths_resolution, depths_offset, alpha):  # also give optional boundaries
+def create_image(X, pixs, depths_resolution, depths_offset):  # also give optional boundaries
     H_, edges = np.histogramdd(X, bins=[pixs - 2 * EXTRA_SIDE_PIXELS, pixs - 2 * EXTRA_SIDE_PIXELS, depths_resolution], normed=False)
     H = np.zeros((pixs, pixs, depths_resolution))
     H_filtered = np.zeros((pixs, pixs, depths_resolution))
